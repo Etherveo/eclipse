@@ -9,7 +9,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const handleAction = async (formData) => {
+  const handleAction = async (formData: FormData) => {
     setIsLoading(true);
     setErrorMsg('');
 

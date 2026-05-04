@@ -4,9 +4,9 @@ import { supabase } from '@/lib/supabase';
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 
-export async function loginUser(formData) {
-  const username = formData.get('username');
-  const password = formData.get('password');
+export async function loginUser(formData: FormData) {
+  const username = formData.get('username') as string;
+  const password = formData.get('password') as string;
 
   try {
     // 1. Cari user di database Supabase
