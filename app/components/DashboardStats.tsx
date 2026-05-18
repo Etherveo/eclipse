@@ -66,7 +66,7 @@ export default async function DashboardStats({ transactions }: { transactions: T
           <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm">👥</div>
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Anggota</p>
         </div>
-        <p className="text-2xl font-black text-gray-800">{userCount || 0} <span className="text-sm font-medium text-gray-400">Siswa</span></p>
+        <p className="text-2xl font-black text-gray-800">{userCount || 0} <span className="text-sm font-medium text-gray-400">Orang</span></p>
       </div>
 
       {/* Card 2: Transaksi Hari Ini */}

@@ -142,10 +142,10 @@ export default async function Home() {
             </div>
           )}
 
-          {/* Placeholder Kelola Siswa */}
+          {/* Placeholder Kelola anggota */}
           <Link href="/student" className="bg-white hover:bg-emerald-50 border border-gray-100 p-5 rounded-3xl shadow-sm flex flex-col items-center justify-center gap-3 transition group">
             <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">👥</div>
-            <span className="font-semibold text-gray-700 text-sm">Kelola Siswa</span>
+            <span className="font-semibold text-gray-700 text-sm">Kelola anggota</span>
           </Link>
 
           {/* Placeholder Laporan */}
