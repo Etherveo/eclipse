@@ -121,7 +121,7 @@ export default async function ReportPage(props: { searchParams: Promise<{ [key: 
             <p className="text-gray-500 text-sm">Dicetak oleh: {user.name} | Tanggal Cetak: {new Date().toLocaleDateString('id-ID')}</p>
           </div>
 
-          <div className="grid grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-green-50/50 border border-green-100 p-5 rounded-2xl print:border-gray-300 print:bg-transparent">
               <p className="text-sm text-green-700 font-bold mb-1">Total Pemasukan</p>
               <p className="text-2xl font-black text-green-600">Rp {totalIncome.toLocaleString('id-ID')}</p>
