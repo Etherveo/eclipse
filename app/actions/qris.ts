@@ -2,22 +2,32 @@
 
 import { supabase } from '@/lib/supabase';
 import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
 
 export async function uploadQris(formData: FormData) {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get('session_kas');
+  if (!sessionCookie) return { success: false, message: 'Sesi tidak valid' };
+  
+  const session = JSON.parse(sessionCookie.value);
+  const groupId = session.group_id;
+
+  if (!groupId) return { success: false, message: 'Kelompok tidak ditemukan' };
+
   const file = formData.get('file') as File;
   if (!file) return { success: false, message: 'File tidak ditemukan' };
 
   try {
     const fileExt = file.name.split('.').pop();
-    // Bikin nama file unik pakai timestamp biar nggak ke-cache saat di-replace
-    const fileName = `qris_${Date.now()}.${fileExt}`;
+    // Bikin nama file unik yang memuat ID Group agar tidak tertukar antar kelompok
+    const fileName = `qris_${groupId}_${Date.now()}.${fileExt}`;
 
     // Upload ke bucket transaction_proofs (di dalam folder qris/)
     const { error: uploadError } = await supabase.storage
       .from('transaction_proofs')
       .upload(`qris/${fileName}`, file);
 
-    if (uploadError) throw new Error('Gagal upload gambar QRIS');
+    if (uploadError) throw new Error('Gagal upload gambar QRIS: ' + uploadError.message);
 
     // Ambil URL public
     const { data: publicUrlData } = supabase.storage
@@ -26,17 +36,32 @@ export async function uploadQris(formData: FormData) {
 
     const qrisUrl = publicUrlData.publicUrl;
 
-    // Update ke tabel class_settings (id = 1)
-    const { error: dbError } = await supabase
+    // Cek apakah class_settings untuk group_id ini sudah ada
+    const { data: existingSetting } = await supabase
       .from('class_settings')
-      .update({ qris_url: qrisUrl })
-      .eq('id', 1);
+      .select('id')
+      .eq('group_id', groupId)
+      .single();
 
-    if (dbError) throw new Error('Gagal menyimpan URL ke database');
+    if (existingSetting) {
+      // Jika sudah ada, Update
+      const { error: updateError } = await supabase
+        .from('class_settings')
+        .update({ qris_url: qrisUrl })
+        .eq('group_id', groupId);
+      if (updateError) throw new Error('Gagal update URL ke database');
+    } else {
+      // Jika belum ada, Insert baru
+      const { error: insertError } = await supabase
+        .from('class_settings')
+        .insert([{ group_id: groupId, qris_url: qrisUrl }]);
+      if (insertError) throw new Error('Gagal menyimpan URL ke database');
+    }
 
-    revalidatePath('/'); // Refresh halaman
-    return { success: true, url: qrisUrl };
+    revalidatePath('/admin');
+    revalidatePath('/user');
 
+    return { success: true, qrisUrl };
   } catch (error: any) {
     console.error(error);
     return { success: false, message: error.message };

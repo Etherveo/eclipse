@@ -44,8 +44,8 @@ export default function QrisViewer({ initialUrl, role }: { initialUrl: string | 
     formData.append('file', e.target.files[0]);
     
     const res = await uploadQris(formData);
-    if (res.success && res.url) {
-      setQrisUrl(res.url);
+    if (res.success && res.qrisUrl) {
+      setQrisUrl(res.qrisUrl);
     } else {
       alert(res.message);
     }

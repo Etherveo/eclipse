@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { UserSession } from '@/types';
+import Link from 'next/link';
 import FormSetor from './FormSetor';
 
 export default async function SetorKasUserPage() {
@@ -12,13 +13,14 @@ export default async function SetorKasUserPage() {
   
   const user: UserSession = JSON.parse(sessionCookie.value);
 
-  if (user.role === 'admin') redirect('/');
+  // Lempar admin dan user yang belum punya grup
+  if (user.role === 'admin' || !user.group_id) redirect('/');
 
-  // Ambil Data QRIS untuk dilempar ke form
+  // Ambil Data QRIS berdasarkan group_id
   const { data: settingsData } = await supabase
     .from('class_settings')
     .select('qris_url')
-    .eq('id', 1)
+    .eq('group_id', user.group_id)
     .single();
     
   const qrisUrl = settingsData?.qris_url || null;
@@ -26,10 +28,10 @@ export default async function SetorKasUserPage() {
   return (
     <main className="min-h-screen bg-gray-50 p-6 md:p-12">
       <div className="max-w-xl mx-auto mb-4">
+        <Link href="/user" className="text-gray-500 hover:text-emerald-600 hover:underline text-sm font-medium mb-2 block">← Kembali ke Dashboard</Link>
         <p className="text-sm text-gray-600">Login sebagai: <span className="font-bold">{user.name}</span></p>
       </div>
-      {/* Lempar qrisUrl ke komponen form */}
-      <FormSetor userId={user.id} qrisUrl={qrisUrl} />
+      <FormSetor qrisUrl={qrisUrl} />
     </main>
   );
 }

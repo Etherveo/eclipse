@@ -9,16 +9,13 @@ interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function SharedReportPage({ searchParams }: PageProps) {
+export default async function AdminReportPage({ searchParams }: PageProps) {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('session_kas');
 
   if (!sessionCookie) redirect('/login');
   const user: UserSession = JSON.parse(sessionCookie.value);
-  
-  // Proteksi: Developer atau user tanpa grup tidak boleh masuk
-  if (user.role === 'developer') redirect('/dev');
-  if (!user.group_id) redirect('/onboarding');
+  if (user.role !== 'admin' || !user.group_id) redirect('/');
 
   const resolvedParams = await searchParams;
   const filter = typeof resolvedParams.filter === 'string' ? resolvedParams.filter : 'bulan_ini';
@@ -114,15 +111,12 @@ export default async function SharedReportPage({ searchParams }: PageProps) {
   const totalPengeluaran = transactions.filter(t => t.type === 'outcome').reduce((acc, curr) => acc + curr.amount, 0);
   const saldoAkhir = totalPemasukan - totalPengeluaran;
 
-  // Menentukan route kembali sesuai role
-  const backRoute = user.role === 'admin' ? '/admin' : '/user';
-
   return (
     <main className="min-h-screen bg-gray-50 p-6 md:p-12 print:bg-white print:p-0">
       <div className="max-w-5xl mx-auto space-y-6">
         
         <div className="flex justify-between items-center text-sm text-gray-600 print:hidden">
-          <Link href={backRoute} className="hover:text-amber-600 hover:underline font-medium">← Kembali ke Dashboard</Link>
+          <Link href="/admin" className="hover:text-amber-600 hover:underline font-medium">← Kembali ke Dashboard</Link>
           <p>Login sebagai: <span className="font-bold">{user.name}</span></p>
         </div>
 
@@ -184,10 +178,9 @@ export default async function SharedReportPage({ searchParams }: PageProps) {
 
           <div className="hidden print:flex justify-end mt-16 pt-8">
             <div className="text-center">
-              {/* Teks dinamis berdasarkan role user */}
-              <p className="text-sm text-gray-600 mb-16">{user.role === 'admin' ? 'Disetujui Oleh,' : 'Dicetak Oleh,'}</p>
+              <p className="text-sm text-gray-600 mb-16">Disetujui Oleh,</p>
               <p className="font-bold text-gray-900 underline">{user.name}</p>
-              <p className="text-xs text-gray-500 mt-1">{user.role === 'admin' ? 'Admin / Bendahara Kelompok' : 'Anggota Kelompok'}</p>
+              <p className="text-xs text-gray-500 mt-1">Admin / Bendahara Kelompok</p>
             </div>
           </div>
         </div>

@@ -32,7 +32,7 @@ export default function Login() {
       <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
         
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-800">Login Admin Kas</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Login Koeklips</h1>
           <p className="text-gray-500 text-sm mt-1">Silakan masuk untuk mengelola kas kelas</p>
         </div>
 

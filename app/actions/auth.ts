@@ -41,9 +41,12 @@ export async function loginUser(formData: FormData) {
     // Kita simpan data penting aja di cookie (jangan simpan password!)
     const sessionData = {
       id: user.id,
+      group_id: user.group_id, // Tambahan baru
       username: user.username,
       role: user.role,
-      name: user.name
+      name: user.full_name || user.name, // Sesuai DB baru lu pakai full_name
+      approval_status: user.approval_status, // Tambahan baru
+      email_verified: !!user.email_verified_at // Tambahkan baris ini (ubah null jadi false)
     };
 
     // Tambahin 'await' dan panggil cookies()
@@ -66,4 +69,43 @@ export async function loginUser(formData: FormData) {
 export async function logoutUser() {
   const cookieStore = await cookies();
   cookieStore.delete('session_kas');
+}
+
+export async function refreshSessionStatus() {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get('session_kas');
+
+  if (!sessionCookie) return { changed: false };
+
+  const user = JSON.parse(sessionCookie.value);
+
+  try {
+    // Tarik status terbaru dari Database
+    const { data, error } = await supabase
+      .from('users')
+      .select('approval_status')
+      .eq('id', user.id)
+      .single();
+
+    if (error) throw new Error(error.message);
+
+    // Kalau status di DB beda sama yang di Cookie, update Cookie-nya!
+    if (data && data.approval_status !== user.approval_status) {
+      user.approval_status = data.approval_status;
+      
+      cookieStore.set('session_kas', JSON.stringify(user), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 60 * 60 * 24,
+        path: '/',
+      });
+
+      return { changed: true, status: data.approval_status };
+    }
+
+    return { changed: false };
+  } catch (err) {
+    console.error('Refresh status error:', err);
+    return { changed: false };
+  }
 }
