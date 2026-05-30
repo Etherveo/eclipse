@@ -18,6 +18,7 @@ export default function LogoutButton() {
   return (
     <button 
       onClick={handleLogout} 
+      suppressHydrationWarning
       className="text-red-500 font-medium cursor-pointer hover:text-red-700 hover:underline transition bg-transparent border-none p-0"
     >
       Logout
