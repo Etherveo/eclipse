@@ -95,7 +95,6 @@ export default function LoginPage() {
           <div className="space-y-6">
             <div className="text-center">
               <h1 className="text-2xl font-bold text-gray-900">Selamat Datang Kembali</h1>
-              <p className="text-gray-500 text-sm mt-1">Masuk ke dashboard akun Kas Eclipse</p>
             </div>
 
             {errorMsg && <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-semibold text-center">{errorMsg}</div>}
@@ -120,7 +119,7 @@ export default function LoginPage() {
               </div>
 
               <button type="submit" disabled={isLoading} className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold hover:bg-blue-700 transition disabled:opacity-50 shadow-sm mt-2">
-                {isLoading ? 'Memproses...' : 'Masuk Aplikasi'}
+                {isLoading ? 'Memproses...' : 'Masuk'}
               </button>
             </form>
 
@@ -142,8 +141,8 @@ export default function LoginPage() {
 
             <form onSubmit={handleInitiateRecovery} className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Username atau Email Akun</label>
-                <input type="text" required value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="Masukkan username atau email..." className="w-full border border-gray-300 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+                <label className="block text-sm font-semibold text-gray-700 mb-1">Email Akun</label>
+                <input type="text" required value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="Masukkan email akun..." className="w-full border border-gray-300 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
 
               <div>
@@ -153,7 +152,7 @@ export default function LoginPage() {
                     <span>📧</span> <span className="text-xs">OTP ke Email</span>
                   </button>
                   <button type="button" onClick={() => setRecoveryMethod('pin')} className={`p-3 border rounded-xl font-bold text-sm text-center flex flex-col items-center justify-center gap-1 transition ${recoveryMethod === 'pin' ? 'border-blue-600 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}>
-                    <span>🔒</span> <span className="text-xs">Gunakan PIN Koperasi</span>
+                    <span>🔒</span> <span className="text-xs">Gunakan PIN</span>
                   </button>
                 </div>
               </div>

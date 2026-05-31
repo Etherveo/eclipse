@@ -66,7 +66,7 @@ export default async function DashboardStats({ transactions }: { transactions: T
           <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm">👥</div>
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Anggota</p>
         </div>
-        <p className="text-2xl font-black text-gray-800">{userCount || 0} <span className="text-sm font-medium text-gray-400">Orang</span></p>
+        <p className="text-1lg font-black text-gray-800">{userCount || 0} <span className="text-sm font-medium text-gray-400">Orang</span></p>
       </div>
 
       {/* Card 2: Transaksi Hari Ini */}
@@ -75,7 +75,7 @@ export default async function DashboardStats({ transactions }: { transactions: T
           <div className="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-sm">⚡</div>
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Aktivitas</p>
         </div>
-        <p className="text-2xl font-black text-gray-800">{todayTrxCount} <span className="text-sm font-medium text-gray-400">Trx Baru</span></p>
+        <p className="text-1lg font-black text-gray-800">{todayTrxCount} <span className="text-sm font-medium text-gray-400">Trx Baru</span></p>
       </div>
 
       {/* Card 3: Pemasukan Hari Ini */}
@@ -84,7 +84,7 @@ export default async function DashboardStats({ transactions }: { transactions: T
           <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm">💰</div>
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Masuk (Hari Ini)</p>
         </div>
-        <p className="text-xl font-black text-gray-800">Rp {todayIncome.toLocaleString('id-ID')}</p>
+        <p className="text-1lg font-black text-gray-800">Rp {todayIncome.toLocaleString('id-ID')}</p>
       </div>
 
       {/* Card 4: Growth / Tren */}
@@ -96,14 +96,14 @@ export default async function DashboardStats({ transactions }: { transactions: T
           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${isGrowthPositive ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'}`}>
             {isGrowthPositive ? '📈' : '📉'}
           </div>
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Tren Harian</p>
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Growth</p>
         </div>
         
         <div className="flex items-end gap-1 relative z-10">
-          <p className={`text-2xl font-black ${isGrowthPositive ? 'text-emerald-600' : 'text-red-600'}`}>
+          <p className={`text-1lg font-black ${isGrowthPositive ? 'text-emerald-600' : 'text-red-600'}`}>
             {isGrowthPositive ? '+' : ''}{growth.toFixed(1)}%
           </p>
-          <p className="text-xs text-gray-400 font-medium mb-1">vs Kemarin</p>
+          {/* <p className="text-xs text-gray-400 font-medium mb-1">vs Kemarin</p> */}
         </div>
       </div>
     </section>

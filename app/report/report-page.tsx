@@ -126,7 +126,7 @@ export default async function SharedReportPage({ searchParams }: PageProps) {
           <p>Login sebagai: <span className="font-bold">{user.name}</span></p>
         </div>
 
-        <FilterLaporan transactions={transactions} user={user}/>
+        <FilterLaporan transactions={transactions} />
 
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 print:shadow-none print:border-none">
           <div className="text-center mb-8">

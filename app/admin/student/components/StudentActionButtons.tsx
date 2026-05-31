@@ -18,7 +18,8 @@ export default function StudentActionButtons({
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Sembunyikan tombol untuk diri sendiri (ngeditnya di Profil)
-  if (userId === currentUserId) return <span className="text-xs font-semibold text-gray-400 italic">Akun Anda</span>;
+  if (userId === currentUserId) return <Link href="../../profil" className="items-center gap-2 bg-gray-50 border border-gray-200 px-4 py-2 rounded-xl hover:bg-gray-100 transition shadow-sm font-medium text-gray-700 text-sm">
+    Edit Akun</Link>;
 
   const handleDelete = async () => {
     // Validasi PIN

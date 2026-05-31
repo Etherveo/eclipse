@@ -6,6 +6,41 @@ import Link from 'next/link';
 import DashboardStats from '@/app/components/DashboardStats';
 import QrisViewer from '@/app/components/QrisViewer';
 
+function profilePictureRenderer({ userData }: { userData: any }) {
+  return (
+    <div>
+      {userData.profile_picture_url ? (
+        <img 
+          src={(() => {
+            try {
+              const urls = JSON.parse(userData.profile_picture_url);
+              return Array.isArray(urls) ? urls[0] : userData.profile_picture_url;
+            } catch {
+              return userData.profile_picture_url; // Fallback jika bukan JSON
+            }
+          })()} 
+          alt="Profile" 
+          onError={(e) => {
+            try {
+              const urls = JSON.parse(userData.profile_picture_url);
+              const currentSrc = (e.target as HTMLImageElement).src;
+              const currentIndex = urls.indexOf(currentSrc);
+              if (currentIndex > -1 && currentIndex < urls.length - 1) {
+                (e.target as HTMLImageElement).src = urls[currentIndex + 1];
+              } else {
+                (e.target as HTMLImageElement).style.display = 'none';
+              }
+            } catch (err) {}
+          }}
+          className="w-16 h-16 rounded-full object-cover border-2 border-gray-300 bg-white"
+        />
+      ) : (
+        <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-2xl">👤</div>
+      )}
+    </div>
+  );
+}
+
 export default async function UserDashboard() {
   // 1. Cek Sesi
   const cookieStore = await cookies();
@@ -92,7 +127,7 @@ export default async function UserDashboard() {
         <div className="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-lg">
-              {user.name.charAt(0).toUpperCase()}
+              {profilePictureRenderer({ userData: user })}
             </div>
             <div>
               <p className="font-bold text-gray-900 leading-tight">{user.name}</p>
@@ -142,16 +177,18 @@ export default async function UserDashboard() {
           )}
         </header>
 
+        <section>
+          <Link href="../report" className="bg-white hover:bg-amber-50 border border-gray-100 p-5 rounded-3xl shadow-sm flex flex-col items-center justify-center gap-3 transition group">
+            <div className="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">📊</div>
+            <span className="font-semibold text-gray-700 text-sm">Lihat Laporan</span>
+          </Link>
+        </section>
+
         {/* --- SECTION 2: MENU GRID 3 KOLOM --- */}
         <section className="grid grid-cols-2 gap-4">
           <Link href="/user/setor" className="bg-white hover:bg-emerald-50 border border-gray-100 p-5 rounded-3xl shadow-sm flex flex-col items-center justify-center gap-3 transition group">
             <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">💸</div>
             <span className="font-semibold text-gray-700 text-sm">Setor Kas</span>
-          </Link>
-
-          <Link href="../report" className="bg-white hover:bg-amber-50 border border-gray-100 p-5 rounded-3xl shadow-sm flex flex-col items-center justify-center gap-3 transition group">
-            <div className="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">📊</div>
-            <span className="font-semibold text-gray-700 text-sm">Lihat Laporan</span>
           </Link>
 
           <Link href="/user/pinjam" className="bg-white hover:bg-rose-50 border border-gray-100 p-5 rounded-3xl shadow-sm flex flex-col items-center justify-center gap-3 transition group">

@@ -45,7 +45,7 @@ export default function FormPinjaman({ backRoute, role }: { backRoute: string, r
         <ul className="list-disc list-inside pl-2 space-y-1">
           <li>Maksimal pinjaman <strong>Rp 20.000</strong> per pengajuan.</li>
           <li>Hanya diperbolehkan <strong>1x dalam sebulan</strong>.</li>
-          <li>Wajib melampirkan <strong>KTM asli</strong> sebagai jaminan.</li>
+          <li>Wajib melampirkan <strong>KTM/KTP asli</strong> sebagai jaminan.</li>
           {role === 'admin' && <li>Sebagai Admin, pengajuan ini akan diteruskan ke <strong>Ketua</strong> kelompok.</li>}
         </ul>
       </div>
@@ -85,7 +85,7 @@ export default function FormPinjaman({ backRoute, role }: { backRoute: string, r
           <Link href={backRoute} className="w-full bg-gray-100 text-gray-700 py-3.5 rounded-xl font-bold text-center hover:bg-gray-200 transition">
             Batal
           </Link>
-          <button type="submit" disabled={isLoading} className="w-full bg-rose-600 text-white py-3.5 rounded-xl font-bold hover:bg-rose-700 transition disabled:opacity-50 shadow-sm shadow-rose-600/20">
+          <button type="submit" disabled={isLoading} className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold hover:bg-rose-700 transition disabled:opacity-50 shadow-sm shadow-rose-600/20">
             {isLoading ? 'Mengirim...' : 'Ajukan Pinjaman'}
           </button>
         </div>

@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import * as XLSX from 'xlsx';
+import Link from 'next/link';
 
-export default function FilterLaporanUser({ transactions }: { transactions: any[] }) {
+export default function FilterLaporanUser({ transactions, user }: { transactions: any[]; user?: { role?: string } }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -134,6 +135,16 @@ export default function FilterLaporanUser({ transactions }: { transactions: any[
         >
           📊 Ekspor Excel
         </button>
+        {/* TOMBOL LAPORAN ANGSURAN KHUSUS ADMIN */}
+        {user?.role === 'admin' && (
+          <Link
+            href="../admin/angsuran"
+            className="flex items-center justify-center gap-2 bg-red-500 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-800 active:scale-95 transition-all shadow-sm border border-transparent"
+          >
+            <span className="text-base">📓</span>
+            Laporan Angsuran
+          </Link>
+        )}
       </div>
     </div>
   );

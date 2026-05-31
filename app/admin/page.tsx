@@ -2,11 +2,12 @@ import { supabase } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { Transaction, UserSession, Target } from '@/types';
+import Link from 'next/link';
 import ActionButtons from '@/app/components/ActionButtons';
 import DashboardStats from '@/app/components/DashboardStats';
-import LoanBanner from '@/app/components/LoanBanner';
 import MemberRequestActions from './components/MemberRequestActions';
-import Link from 'next/link';
+import LoanBanner from '@/app/components/LoanBanner';
+import ProfilePicture from '@/app/components/ProfilePicture';
 import QrisViewer from '@/app/components/QrisViewer';
 
 export default async function AdminDashboard() {
@@ -103,9 +104,10 @@ export default async function AdminDashboard() {
         {/* --- HEADER BAR BARU --- */}
         <div className="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg">
+            {/* <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg">
               {user.name.charAt(0).toUpperCase()}
-            </div>
+            </div> */}
+            <ProfilePicture userData={user} />
             <div>
               <p className="font-bold text-gray-900 leading-tight">{user.name}</p>
               <p className="text-xs font-semibold text-blue-600 flex items-center gap-1">
@@ -187,6 +189,13 @@ export default async function AdminDashboard() {
           )}
         </header>
 
+        <section className="w-full">
+          <Link href="../report" className="bg-white hover:bg-amber-50 border border-gray-100 p-4 rounded-3xl shadow-sm flex flex-col items-center justify-center gap-2 transition group">
+            <div className="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">📊</div>
+            <span className="font-semibold text-gray-700 text-sm text-center">Lihat Laporan</span>
+          </Link>
+        </section>
+
         {/* --- SECTION 2: MENU GRID 4 KOLOM --- */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Link href="/admin/tambah" className="bg-white hover:bg-emerald-50 border border-gray-100 p-4 rounded-3xl shadow-sm flex flex-col items-center justify-center gap-2 transition group">
@@ -200,10 +209,6 @@ export default async function AdminDashboard() {
           <Link href="/admin/student" className="bg-white hover:bg-purple-50 border border-gray-100 p-4 rounded-3xl shadow-sm flex flex-col items-center justify-center gap-2 transition group">
             <div className="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">👥</div>
             <span className="font-semibold text-gray-700 text-sm text-center">Anggota</span>
-          </Link>
-          <Link href="../report" className="bg-white hover:bg-amber-50 border border-gray-100 p-4 rounded-3xl shadow-sm flex flex-col items-center justify-center gap-2 transition group">
-            <div className="w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">📊</div>
-            <span className="font-semibold text-gray-700 text-sm text-center">Laporan</span>
           </Link>
           <Link href="/admin/pinjam" className="bg-white hover:bg-rose-50 border border-gray-100 p-4 rounded-3xl shadow-sm flex flex-col items-center justify-center gap-2 transition group">
             <div className="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">💳</div>

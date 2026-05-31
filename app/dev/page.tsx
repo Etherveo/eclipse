@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { UserSession } from '@/types';
 import Link from 'next/link';
 import AdminRequestActions from './components/AdminRequestActions';
+import DeleteGroupButton from './components/DeleteGroupButton';
 
 export default async function DevDashboard() {
   // 1. Cek Sesi (Hanya Developer)
@@ -60,166 +61,85 @@ export default async function DevDashboard() {
   }) || [];
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-indigo-500/30">
-      {/* Background Glow Effect */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-indigo-600/20 blur-[120px] rounded-full pointer-events-none -z-10"></div>
-
-      <div className="max-w-6xl mx-auto p-6 md:p-12 space-y-10 relative z-10">
-        
-        {/* --- HEADER --- */}
-        <header className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 border-b border-slate-800/60 pb-8">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-bold tracking-widest uppercase">System Control</span>
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            </div>
-            <h1 className="text-4xl font-black tracking-tight text-white">Eclipse<span className="text-indigo-500">.</span>Dev</h1>
-          </div>
-          <div className="flex items-center gap-4 bg-slate-900/50 border border-slate-800 rounded-2xl p-2 pr-4 backdrop-blur-md">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg">
-              {user.name.charAt(0).toUpperCase()}
-            </div>
-            <div>
-              <p className="text-xs text-slate-400 font-medium">Logged in as</p>
-              <p className="text-sm font-bold text-slate-100">{user.username}</p>
-            </div>
-            <Link href="/profil" className="ml-4 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 hover:border-slate-600 px-4 py-2 rounded-xl transition-all text-sm font-medium shadow-sm">
-              ⚙️ Profil
-            </Link>
-          </div>
-        </header>
+    <main className="min-h-screen bg-gray-50 p-6 md:p-12">
+      <div className="max-w-6xl mx-auto space-y-6">
 
         {/* --- BANNER REQUEST ADMIN (Muncul jika ada) --- */}
         {pendingAdmins && pendingAdmins.length > 0 && (
-          <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 rounded-3xl p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-lg shadow-amber-500/5">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/20 flex items-center justify-center text-2xl">
-                🔔
-              </div>
-              <div>
-                <h3 className="text-amber-400 font-bold text-lg">Ada {pendingAdmins.length} Request Admin Baru!</h3>
-                <p className="text-amber-500/70 text-sm mt-0.5">Harap segera tinjau kredensial KTM mereka di tabel bawah.</p>
-              </div>
-            </div>
-            <a href="#request-table" className="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl transition-colors shadow-md text-sm whitespace-nowrap">
-              Tinjau Sekarang
-            </a>
-          </div>
-        )}
-
-        {/* --- SECTION 1: GLOBAL STATISTICS --- */}
-        <section>
-          <h2 className="text-lg font-bold text-slate-100 mb-4 flex items-center gap-2">
-            <span className="text-indigo-400">🌍</span> Global Metrics
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 hover:border-slate-700 p-6 rounded-3xl transition-colors">
-              <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest mb-3">Kelompok</p>
-              <p className="text-4xl font-black text-white">{totalGroups}</p>
-            </div>
-            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 hover:border-slate-700 p-6 rounded-3xl transition-colors">
-              <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest mb-3">Total Users</p>
-              <p className="text-4xl font-black text-sky-400">{totalUsers}</p>
-            </div>
-            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 hover:border-slate-700 p-6 rounded-3xl transition-colors">
-              <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest mb-3">Total Admin</p>
-              <p className="text-4xl font-black text-purple-400">{totalAdmins}</p>
-            </div>
-            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 hover:border-slate-700 p-6 rounded-3xl transition-colors">
-              <p className="text-xs text-slate-400 font-semibold uppercase tracking-widest mb-3">Total Anggota</p>
-              <p className="text-4xl font-black text-emerald-400">{totalAnggota}</p>
-            </div>
-            <div className="bg-indigo-500/10 backdrop-blur-sm border border-indigo-500/20 hover:border-indigo-500/40 p-6 rounded-3xl transition-colors relative overflow-hidden">
-              <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-indigo-500/20 rounded-full blur-xl"></div>
-              <p className="text-xs text-indigo-300 font-semibold uppercase tracking-widest mb-3 relative z-10">Aktivitas Hari Ini</p>
-              <p className="text-4xl font-black text-indigo-400 relative z-10">{globalTodayActivity} <span className="text-sm font-medium opacity-60">Trx</span></p>
-            </div>
-          </div>
-        </section>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* --- SECTION 2: PER-GROUP STATISTICS --- */}
-          <section className="lg:col-span-1 space-y-4">
-            <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-              <span className="text-purple-400">📊</span> Statistik Per Kelompok
-            </h2>
-            <div className="flex flex-col gap-4">
-              {groupStats.length === 0 ? (
-                <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8 text-center text-slate-500 text-sm">
-                  Belum ada kelompok yang terdaftar di sistem.
-                </div>
-              ) : (
-                groupStats.map((group) => (
-                  <div key={group.id} className="bg-slate-900/40 border border-slate-800/80 rounded-3xl p-5 hover:bg-slate-900/80 transition-colors">
-                    <div className="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
-                      <h3 className="font-bold text-slate-200">{group.name}</h3>
-                      <span className="text-xs font-semibold bg-slate-800 text-slate-400 px-2.5 py-1 rounded-md">
-                        {group.totalUsers} User
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-3 gap-2 text-center">
-                      <div className="bg-slate-950/50 rounded-xl p-2 border border-slate-800/50">
-                        <p className="text-[10px] text-slate-500 font-bold uppercase mb-1">Admin</p>
-                        <p className="text-lg font-black text-purple-400">{group.admins}</p>
-                      </div>
-                      <div className="bg-slate-950/50 rounded-xl p-2 border border-slate-800/50">
-                        <p className="text-[10px] text-slate-500 font-bold uppercase mb-1">Anggota</p>
-                        <p className="text-lg font-black text-emerald-400">{group.anggota}</p>
-                      </div>
-                      <div className="bg-indigo-950/30 rounded-xl p-2 border border-indigo-500/10">
-                        <p className="text-[10px] text-indigo-400/70 font-bold uppercase mb-1">Trx Today</p>
-                        <p className="text-lg font-black text-indigo-400">{group.activity}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
+          <section className="bg-amber-50 border border-amber-200 rounded-3xl overflow-hidden shadow-sm">
+            {/* Menggunakan flex-col (mobile) dan md:flex-row (desktop) */}
+            <div className="p-4 border-b border-amber-200 flex justify-between flex-col md:flex-row md:justify-between md:items-center gap-2 md:gap-4 bg-amber-500">
+              <h2 className="text-sm font-bold text-black flex items-center gap-2 shrink-0">
+                <span>🔔</span> Ada {pendingAdmins.length} Request Admin Baru!
+              </h2>
+              {/* Ditambahkan text-sm dan warna teks senada agar lebih rapi */}
+              <p className="text-sm text-black/90">
+                Silakan tinjau kredensial mereka pada tabel otorisasi di bawah.
+              </p>
             </div>
           </section>
+        )}
+        
+        {/* --- HEADER BAR --- */}
+        <div className="flex justify-between rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xl shrink-0">
+              {user.name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p className="font-bold text-gray-900 leading-tight">{user.name}</p>
+              <p className="text-xs font-semibold text-blue-600 flex items-center gap-1 mt-0.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 inline-block animate-pulse"></span>
+                System Developer
+              </p>
+            </div>
+          </div>
+          <Link href="/profil" className="w-20 sm:w-auto text-center flex items-center justify-center gap-2 bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-xl hover:bg-gray-100 transition shadow-sm font-medium text-gray-700 text-sm">
+            <span>⚙️</span> Profil
+          </Link>
+        </div>
 
-          {/* --- SECTION 3: REQUEST REGISTRASI ADMIN --- */}
-          <section className="lg:col-span-2 space-y-4" id="request-table">
-            <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
-              <span className="text-rose-400">🛡️</span> Otorisasi Admin Baru
+        {/* KOLOM KIRI: REQUEST ADMIN */}
+          <section className="lg:col-span-2 space-y-4">
+            <h2 className="text-lg font-bold text-gray-800 text-center">
+              Otorisasi Admin Baru
             </h2>
-            <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-3xl overflow-hidden shadow-xl shadow-black/20">
+            <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-slate-900/80 text-slate-400 text-xs uppercase tracking-wider">
-                      <th className="p-5 font-semibold border-b border-slate-800">Pendaftar</th>
-                      <th className="p-5 font-semibold border-b border-slate-800">Identitas KTM</th>
-                      <th className="p-5 font-semibold border-b border-slate-800">Waktu</th>
-                      <th className="p-5 font-semibold border-b border-slate-800 text-right">Keputusan</th>
+                    <tr className="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider font-semibold">
+                      <th className="p-4 border-b">Pendaftar</th>
+                      <th className="p-4 border-b">Identitas KTM/KTP</th>
+                      <th className="p-4 border-b">Waktu</th>
+                      <th className="p-4 border-b text-right">Keputusan</th>
                     </tr>
                   </thead>
                   <tbody>
                     {!pendingAdmins || pendingAdmins.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="p-10 text-center text-slate-500">
-                          <div className="text-3xl mb-3 opacity-50">☕</div>
+                        <td colSpan={4} className="p-10 text-center text-gray-500 text-sm">
+                          <span className="block text-3xl mb-2 opacity-50">☕</span>
                           Semua request sudah tertangani. Santai dulu!
                         </td>
                       </tr>
                     ) : (
                       pendingAdmins.map((req) => (
-                        <tr key={req.id} className="hover:bg-slate-800/30 text-slate-300 text-sm transition-colors border-b border-slate-800/50 last:border-0">
-                          <td className="p-5 align-top">
-                            <p className="font-bold text-slate-200">@{req.username}</p>
-                            <p className="text-xs text-slate-500 mt-0.5">{req.email}</p>
+                        <tr key={req.id} className="hover:bg-gray-50/50 text-gray-700 text-sm transition-colors">
+                          <td className="p-4 border-b align-top">
+                            <p className="font-bold text-gray-900">@{req.username}</p>
+                            <p className="text-xs text-gray-500 mt-0.5">{req.email}</p>
                           </td>
-                          <td className="p-5 align-top">
-                            <p className="font-semibold text-slate-300">{req.full_name}</p>
-                            {/* Placeholder untuk tombol view KTM */}
-                            <button className="text-xs text-indigo-400 hover:text-indigo-300 hover:underline mt-1.5 flex items-center gap-1">
-                              📄 Buka Dokumen KTM
+                          <td className="p-4 border-b align-top">
+                            <p className="font-semibold text-gray-800">{req.full_name}</p>
+                            <button className="text-xs text-blue-600 hover:text-blue-800 hover:underline mt-1 flex items-center gap-1 font-medium">
+                              📄 Buka Dokumen
                             </button>
                           </td>
-                          <td className="p-5 align-top whitespace-nowrap text-slate-400">
+                          <td className="p-4 border-b align-top whitespace-nowrap text-gray-500 text-xs">
                             {new Date(req.created_at).toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                           </td>
-                          <td className="p-5 align-top text-right">
+                          <td className="p-4 border-b align-top text-right">
                             <AdminRequestActions userId={req.id} />
                           </td>
                         </tr>
@@ -228,6 +148,81 @@ export default async function DevDashboard() {
                   </tbody>
                 </table>
               </div>
+            </div>
+          </section>
+
+        {/* --- SECTION 1: GLOBAL STATISTICS --- */}
+        <section>
+          <h2 className="text-lg text-center font-bold text-gray-800 mb-4">
+            Global Metrics
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-sm">
+              <p className="text-xs text-gray-500 font-bold uppercase tracking-wider mb-2">Kelompok</p>
+              <p className="text-3xl font-black text-gray-900">{totalGroups}</p>
+            </div>
+            <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-sm">
+              <p className="text-xs text-blue-500 font-bold uppercase tracking-wider mb-2">Total Users</p>
+              <p className="text-3xl font-black text-blue-600">{totalUsers}</p>
+            </div>
+            <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-sm">
+              <p className="text-xs text-purple-500 font-bold uppercase tracking-wider mb-2">Total Admin</p>
+              <p className="text-3xl font-black text-purple-600">{totalAdmins}</p>
+            </div>
+            <div className="bg-white border border-gray-100 p-5 rounded-2xl shadow-sm">
+              <p className="text-xs text-emerald-500 font-bold uppercase tracking-wider mb-2">Total Anggota</p>
+              <p className="text-3xl font-black text-emerald-600">{totalAnggota}</p>
+            </div>
+          </div>
+          <div className="w-full text-center bg-white border border-gray-100 p-5 rounded-2xl shadow-sm">
+            <p className="text-xs text-indigo-600 font-bold uppercase tracking-wider mb-2">Aktivitas Hari Ini</p>
+            <p className="text-3xl font-black text-indigo-700">{globalTodayActivity} <span className="text-sm font-medium text-indigo-400">Trx</span></p>
+          </div>
+        </section>
+
+        {/* --- LAYOUT 2 KOLOM (KIRI: REQUEST ADMIN | KANAN: LIST KELOMPOK) --- */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+          {/* KOLOM KANAN: STATISTIK PER KELOMPOK */}
+          <section className="lg:col-span-1 space-y-4">
+            <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+              <span>📊</span> Statistik Kelompok
+            </h2>
+            <div className="flex flex-col gap-4 max-h-[500px] overflow-y-auto pr-2">
+              {groupStats.length === 0 ? (
+                <div className="bg-white border border-gray-100 rounded-3xl p-8 text-center text-gray-500 text-sm shadow-sm">
+                  Belum ada kelompok yang terdaftar di sistem.
+                </div>
+              ) : (
+                groupStats.map((group) => (
+                  <div key={group.id} className="bg-white rounded-3xl p-5 border border-gray-100 shadow-sm hover:border-blue-200 transition-colors">
+                    <div className="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+                      <h3 className="font-bold text-gray-800">{group.name}</h3>
+                      <span className="text-xs font-semibold bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md">
+                        {group.totalUsers} User
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 md:grid-cols-3 gap-2 text-center">
+                      <div className="bg-purple-100 rounded-xl p-2 border border-purple-100">
+                        <p className="text-[10px] text-purple-600 font-bold uppercase mb-1">Admin</p>
+                        <p className="text-lg font-black text-purple-700">{group.admins}</p>
+                      </div>
+                      <div className="bg-emerald-100 rounded-xl p-2 border border-emerald-100">
+                        <p className="text-[10px] text-emerald-600 font-bold uppercase mb-1">Anggota</p>
+                        <p className="text-lg font-black text-emerald-700">{group.anggota}</p>
+                      </div>
+                      <div className="bg-blue-50 rounded-xl p-2 border border-blue-100">
+                        <p className="text-[10px] text-black font-bold uppercase mb-1">Trx Today</p>
+                        <p className="text-lg font-black text-blue-700">{group.activity}</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 pt-4 border-t border-gray-100 flex justify-center">
+                      <DeleteGroupButton groupId={group.id} groupName={group.name} />
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </section>
 

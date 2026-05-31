@@ -18,7 +18,7 @@ export default function FormTambahAnggota() {
     const res = await addUser(formData);
 
     if (res?.success) {
-      router.push('/admin/student'); // Redirect ke route admin yang benar
+      router.push('/admin/student');
       router.refresh();
     } else {
       setErrorMsg(res?.message || 'Terjadi kesalahan');
@@ -27,58 +27,70 @@ export default function FormTambahAnggota() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-gray-100">
+    <div className="max-w-2xl mx-auto bg-white p-6 md:p-10 rounded-[2rem] shadow-xl shadow-gray-200/40 border border-gray-100">
       
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Tambah Anggota Baru</h1>
-        <p className="text-gray-500 text-sm mt-1">Buat akun untuk anggota atau pengurus kelompok</p>
+      {/* Header Diperbagus */}
+      <div className="text-center gap-4 mb-8 pb-6 border-b border-gray-100">
+        {/* <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 text-2xl shadow-inner shrink-0">
+          ✨
+        </div> */}
+        <div>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">Tambah Anggota</h1>
+          <p className="text-gray-500 text-sm mt-1 font-medium">Buat akun untuk anggota atau pengurus kelas baru</p>
+        </div>
       </div>
 
       {errorMsg && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-sm text-center font-medium">
-          {errorMsg}
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-semibold flex items-center gap-2">
+          <span>⚠️</span> {errorMsg}
         </div>
       )}
 
-      <form action={handleSubmit} className="space-y-5">
+      <form action={handleSubmit} className="space-y-6">
         
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+        {/* Input Nama Lengkap */}
+        <div className="space-y-1.5">
+          <label className="block text-sm font-semibold text-gray-700 ml-1">Nama Lengkap</label>
           <input
             type="text"
-            name="full_name" // Gunakan key full_name
+            name="full_name"
             required
             placeholder="Sesuai KTM/KTP"
-            className="w-full border border-gray-300 rounded-xl p-3.5 outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 rounded-2xl p-4 text-sm outline-none transition-all focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Username Login</label>
-            <input
-              type="text"
-              name="username"
-              required
-              placeholder="Misal: abeloriginal"
-              className="w-full border border-gray-300 rounded-xl p-3.5 outline-none focus:ring-2 focus:ring-blue-500"
-            />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Input Username */}
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-gray-700 ml-1">Username Login</label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium"></span>
+              <input
+                type="text"
+                name="username"
+                required
+                placeholder="Misal: budimannn"
+                className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 rounded-2xl p-4 pl-9 text-sm outline-none transition-all focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password Sementara</label>
-            <div className="relative">
+          {/* Input Password */}
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-gray-700 ml-1">Password Sementara</label>
+            <div className="relative group">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 required
                 placeholder="••••••••"
-                className="w-full border border-gray-300 rounded-xl p-3.5 pr-12 outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 rounded-2xl p-4 pr-16 text-sm outline-none transition-all focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600 font-medium text-xs bg-white px-2.5 py-1.5 rounded-lg border border-gray-200 shadow-sm transition-colors"
               >
                 {showPassword ? 'Tutup' : 'Lihat'}
               </button>
@@ -86,42 +98,49 @@ export default function FormTambahAnggota() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Role Sistem</label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Input Role */}
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-gray-700 ml-1">Role Sistem</label>
             <select
               name="role"
-              className="w-full border border-gray-300 rounded-xl p-3.5 outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 rounded-2xl p-4 text-sm outline-none transition-all focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer"
             >
               <option value="anggota">Anggota Biasa</option>
               <option value="admin">Admin / Pengurus</option>
             </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Jabatan Kelas</label>
+          {/* Input Jabatan */}
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-gray-700 ml-1">Jabatan</label>
             <input
               type="text"
               name="title"
-              placeholder="Misal: Seksi Kebersihan"
-              className="w-full border border-gray-300 rounded-xl p-3.5 outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Misal: Wakil Ketua"
+              className="w-full bg-gray-50/50 border border-gray-200 text-gray-900 rounded-2xl p-4 text-sm outline-none transition-all focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
             />
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-3 pt-4">
+        {/* Tombol Action Dirombak */}
+        <div className="flex flex-col sm:flex-row gap-3 pt-6 mt-4 border-t border-gray-100">
           <Link
             href="/admin/student"
-            className="w-full bg-gray-100 text-gray-700 py-3.5 rounded-xl font-bold text-center hover:bg-gray-200 transition"
+            className="w-full sm:w-1/3 bg-white border-2 border-gray-200 text-gray-700 py-3.5 rounded-2xl font-bold text-center hover:bg-gray-50 hover:border-gray-300 transition-all text-sm flex items-center justify-center"
           >
             Batal
           </Link>
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold hover:bg-blue-700 transition disabled:opacity-50"
+            className="w-full sm:w-2/3 bg-blue-600 text-white py-3.5 rounded-2xl font-bold hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 active:scale-[0.98] transition-all disabled:opacity-50 text-sm flex justify-center items-center gap-2 cursor-pointer"
           >
-            {isLoading ? 'Menyimpan...' : 'Simpan Akun'}
+            {isLoading ? (
+              <>
+                <span className="animate-spin text-xl">⏳</span> Menyimpan...
+              </>
+            ) : 'Simpan Akun Anggota'}
           </button>
         </div>
 

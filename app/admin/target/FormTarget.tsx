@@ -67,7 +67,7 @@ export default function FormTarget() {
 
         <div className="flex flex-col md:flex-row gap-3 pt-4">
           <Link href="/admin" className="w-full bg-gray-100 text-gray-700 py-3.5 rounded-xl font-bold text-center hover:bg-gray-200 transition">Batal</Link>
-          <button type="submit" disabled={isLoading} className="w-full bg-purple-600 text-white py-3.5 rounded-xl font-bold hover:bg-purple-700 transition disabled:opacity-50 shadow-sm">
+          <button type="submit" disabled={isLoading} className="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold hover:bg-purple-700 transition disabled:opacity-50 shadow-sm">
             {isLoading ? 'Memproses...' : 'Simpan Target'}
           </button>
         </div>

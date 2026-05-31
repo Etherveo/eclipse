@@ -75,3 +75,21 @@ async function refreshGroupCookie(groupId: string) {
   }
   revalidatePath('/');
 }
+
+export async function deleteGroupAction(groupId: string) {
+  // Hapus grup dari database
+  // Catatan: Pastikan di Supabase, relasi Foreign Key (group_id) 
+  // di tabel users/transactions diset ke "ON DELETE CASCADE" 
+  // agar data yang terikat ikut terhapus otomatis.
+  const { error } = await supabase
+    .from('groups')
+    .delete()
+    .eq('id', groupId);
+
+  if (error) {
+    return { success: false, message: error.message };
+  }
+
+  revalidatePath('/dev');
+  return { success: true };
+}
